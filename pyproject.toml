@@ -1,0 +1,18 @@
+[project]
+name = "nearorder"
+version = "0.1.0"
+description = "Utilities for working with near-ordered sequences under bounded disorder."
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-cov>=5.0.0",
+    "setuptools>=75.3.2",
+]
+
+[tool.pytest.ini_options]
+addopts = "--cov=nearorder --cov-branch --cov-report=html:htmlcov --cov-report=term-missing"
