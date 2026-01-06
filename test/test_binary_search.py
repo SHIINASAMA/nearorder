@@ -21,6 +21,18 @@ def test_mid_hit_k():
     assert index == 4
 
 
+def test_mid_hit_dirty_data_desc():
+    nums = [9, 10, 8, 4, 6, 7, 3, 1, 2]
+    index = binary_search(nums, 9, order="desc")
+    assert index == 0
+
+
+def test_mid_hit_normal_data_desc():
+    nums = [10, 9, 8, 7, 6, 5, 4, 3, 2]
+    index = binary_search(nums, 4, order="desc")
+    assert index == 6
+
+
 def test_invalid_window_size():
     nums = []
     with pytest.raises(ValueError):
