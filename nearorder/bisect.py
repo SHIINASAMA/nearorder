@@ -1,18 +1,16 @@
-from typing import Callable, Literal, Sequence, TypeVar
+from typing import Optional, Sequence
 
-T = TypeVar("T")
-
-Order = Literal["asc", "desc"]
+from .types import Cmp, Order, T
 
 
 def binary_search(
     xs: Sequence[T],
     k,
     *,
-    cmp: Callable[[T, T], int] = lambda a, b: a - b,
+    cmp: Cmp = lambda a, b: a - b,
     window_size: int = 1,
     order: Order = "asc",
-):
+) -> Optional[int]:
     if window_size <= 0:
         raise ValueError("window_size must be > 0")
 
