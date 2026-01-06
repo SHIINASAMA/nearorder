@@ -16,4 +16,4 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov=nearorder --cov-branch --cov-report=html:htmlcov --cov-report=term-missing"
+addopts = "-v --cov=nearorder --cov-branch --cov-report=html:htmlcov --cov-report=term-missing"
