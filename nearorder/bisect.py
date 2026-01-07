@@ -17,8 +17,11 @@ def binary_search(
     left = 0
     right = len(xs) - 1
 
+    stack = []
+
     while left <= right:
         mid = (left + right) // 2
+        stack.append((left, right))
 
         # 1. Hit
         if cmp(xs[mid], k) == 0:
@@ -27,6 +30,7 @@ def binary_search(
         # 2. Search in window
         window_left = max(0, mid - window_size)
         window_right = min(len(xs), mid + window_size + 1)
+        window = xs[window_left:window_right]
 
         c = 0
         for i in range(window_left, window_right):

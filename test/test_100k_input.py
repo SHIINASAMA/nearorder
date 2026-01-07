@@ -1,9 +1,9 @@
 from datetime import datetime
 
 from nearorder.bisect import binary_search
-from nearorder.bisect_fallback import binary_search_with_fallback
+from nearorder.bisect_fallback import SearchState, binary_search_with_fallback
 
-from .utils import parse_csv_datetimes
+from .utils import parse_csv_datetimes, show_disorder_metrics_with_state
 
 data = parse_csv_datetimes("test_data/datetime_2020~2025.csv")
 k = datetime(
@@ -17,16 +17,38 @@ k = datetime(
 
 
 def cmp(a: datetime, b: datetime) -> int:
+    def datetime_to_days(dt: datetime) -> int:
+        return (dt - datetime(1900, 1, 1)).days + 2
+
+    rt = datetime_to_days(a) - datetime_to_days(b)
+    return int(rt)
+
+
+def cmp_precise(a: datetime, b: datetime) -> int:
     rt = a.timestamp() - b.timestamp()
     return int(rt)
 
 
 def test_binary_search_fallback():
-    index = binary_search_with_fallback(data, k, cmp=lambda a, b: cmp(a, b))
-    assert index == 6991
+    state = SearchState()
+    index = binary_search_with_fallback(data, k, cmp=cmp, state=state, order="desc")
+    assert index is not None
+
+
+def test_binary_search():
+    index = binary_search(data, k, cmp=cmp, window_size=5, order="desc")
+    assert index is not None
 
 
 # This test is expected to return None because this algorithm cannot fall back
 def test_binary_search_precise():
-    index = binary_search(data, k, cmp=lambda a, b: cmp(a, b), window_size=5)
+    index = binary_search(data, k, cmp=cmp_precise, window_size=5, order="desc")
     assert index is None
+
+
+# This test is expected to return the correct index because it uses fallback,
+# it will cost very more comparisons
+def test_binary_search_fallback_precise():
+    state = SearchState()
+    index = binary_search_with_fallback(data, k, cmp=cmp_precise, state=state, order="desc")
+    assert index == 6991
