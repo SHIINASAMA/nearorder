@@ -1,19 +1,24 @@
 from datetime import datetime
 
+import pytest
+
 from nearorder.bisect import binary_search
 from nearorder.bisect_fallback import SearchState, binary_search_with_fallback
+from test.utils import parse_csv_datetimes
 
-from .utils import parse_csv_datetimes, show_disorder_metrics_with_state
 
-data = parse_csv_datetimes("test_data/datetime_2020~2025.csv")
-k = datetime(
-    year=2025,
-    month=8,
-    day=7,
-    hour=23,
-    minute=29,
-    second=59,
-)
+@pytest.fixture(scope="module")
+def data_with_k():
+    data = parse_csv_datetimes("test_data/datetime_2020~2025.csv")
+    k = datetime(
+        year=2025,
+        month=8,
+        day=7,
+        hour=23,
+        minute=29,
+        second=59,
+    )
+    return data, k
 
 
 def cmp(a: datetime, b: datetime) -> int:
@@ -29,26 +34,32 @@ def cmp_precise(a: datetime, b: datetime) -> int:
     return int(rt)
 
 
-def test_binary_search_fallback():
+def test_binary_search_fallback(data_with_k):
+    data, k = data_with_k
     state = SearchState()
     index = binary_search_with_fallback(data, k, cmp=cmp, state=state, order="desc")
     assert index is not None
 
 
-def test_binary_search():
+def test_binary_search(data_with_k):
+    data, k = data_with_k
     index = binary_search(data, k, cmp=cmp, window_size=5, order="desc")
     assert index is not None
 
 
 # This test is expected to return None because this algorithm cannot fall back
-def test_binary_search_precise():
+def test_binary_search_precise(data_with_k):
+    data, k = data_with_k
     index = binary_search(data, k, cmp=cmp_precise, window_size=5, order="desc")
     assert index is None
 
 
 # This test is expected to return the correct index because it uses fallback,
 # it will cost very more comparisons
-def test_binary_search_fallback_precise():
+def test_binary_search_fallback_precise(data_with_k):
+    data, k = data_with_k
     state = SearchState()
-    index = binary_search_with_fallback(data, k, cmp=cmp_precise, state=state, order="desc")
+    index = binary_search_with_fallback(
+        data, k, cmp=cmp_precise, state=state, order="desc"
+    )
     assert index == 6991

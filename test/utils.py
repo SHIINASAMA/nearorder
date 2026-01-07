@@ -46,15 +46,26 @@ def disorder_metrics(xs: Sequence[int], order: Order = "asc") -> dict:
     }
 
 
-def show_disorder_metrics(xs: Sequence[int], *, order: Order = "asc") -> None:
+def get_disorder_metrics(xs: Sequence[int], *, order: Order = "asc") -> str:
     metrics = disorder_metrics(xs, order=order)
-    print(json.dumps(metrics, indent=2, ensure_ascii=False))
+    return json.dumps(metrics, indent=2, ensure_ascii=False)
+
+
+def show_disorder_metrics(xs: Sequence[int], *, order: Order = "asc") -> None:
+    print(get_disorder_metrics(xs, order=order))
+    pass
+
+def get_disorder_metrics_with_state(
+    xs: Sequence[int], state: SearchState, *, order: Order = "asc"
+) -> str:
+    metrics = disorder_metrics(xs, order=order)
+    metrics["fallback_count"] = state.fallback_count
+    metrics["cmp_count"] = state.cmp_count
+    return json.dumps(metrics, indent=2, ensure_ascii=False)
 
 
 def show_disorder_metrics_with_state(
     xs: Sequence[int], state: SearchState, *, order: Order = "asc"
 ) -> None:
-    metrics = disorder_metrics(xs, order=order)
-    metrics["fallback_count"] = state.fallback_count
-    metrics["cmp_count"] = state.cmp_count
-    print(json.dumps(metrics, indent=2, ensure_ascii=False))
+    # print(get_disorder_metrics_with_state(xs, state=state, order=order))
+    pass
