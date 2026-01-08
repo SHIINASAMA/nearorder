@@ -18,3 +18,11 @@ dev = [
 
 [tool.pytest.ini_options]
 addopts = "-v --cov=nearorder --cov-branch --cov-report=html:htmlcov --cov-report=term-missing --html=report.html --self-contained-html"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["nearorder", "nearorder.*"]
