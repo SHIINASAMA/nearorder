@@ -9,6 +9,6 @@ wheels/
 # Virtual environments
 .venv
 
-.coverage
-.idea
-report.html
+.idea/
+.vscode/
+test_cov/
