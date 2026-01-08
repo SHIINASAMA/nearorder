@@ -85,3 +85,22 @@ def displacement_sum(xs: Sequence[int], *, order: Order = "asc") -> int:
     index_map = {v: i for i, v in enumerate(sorted_xs)}
 
     return sum(abs(i - index_map[v]) for i, v in enumerate(xs))
+
+
+def disorder_metrics(xs: Sequence[int], order: Order = "asc") -> dict:
+    """
+    Aggregate disorder metrics.
+    """
+    n = len(xs)
+    max_inv = n * (n - 1) // 2
+
+    inv = inversion_count(xs, order=order)
+
+    return {
+        "n": n,
+        "inversion_count": inv,
+        "inversion_ratio": inv / max_inv if max_inv else 0.0,
+        "local_inversion_ratio": local_inversion_ratio(xs, order=order),
+        "max_monotonic_run": max_monotonic_run(xs, order=order),
+        "displacement_sum": displacement_sum(xs, order=order),
+    }

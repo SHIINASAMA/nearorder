@@ -1,4 +1,4 @@
-from nearorder.math import local_inversion_ratio, max_monotonic_run
+from nearorder.math.metrics import local_inversion_ratio, max_monotonic_run
 
 
 def test_local_inversion_ratio_len_less_then_2():

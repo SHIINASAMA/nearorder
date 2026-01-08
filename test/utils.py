@@ -3,12 +3,7 @@ from datetime import datetime
 from typing import List, Sequence
 
 from nearorder.bisect_fallback import SearchState
-from nearorder.math import (
-    displacement_sum,
-    inversion_count,
-    local_inversion_ratio,
-    max_monotonic_run,
-)
+from nearorder.math.metrics import disorder_metrics
 from nearorder.types import Order
 
 
@@ -27,25 +22,6 @@ def parse_csv_datetimes(path: str) -> List[datetime]:
     return result
 
 
-def disorder_metrics(xs: Sequence[int], order: Order = "asc") -> dict:
-    """
-    Aggregate disorder metrics.
-    """
-    n = len(xs)
-    max_inv = n * (n - 1) // 2
-
-    inv = inversion_count(xs, order=order)
-
-    return {
-        "n": n,
-        "inversion_count": inv,
-        "inversion_ratio": inv / max_inv if max_inv else 0.0,
-        "local_inversion_ratio": local_inversion_ratio(xs, order=order),
-        "max_monotonic_run": max_monotonic_run(xs, order=order),
-        "displacement_sum": displacement_sum(xs, order=order),
-    }
-
-
 def get_disorder_metrics(xs: Sequence[int], *, order: Order = "asc") -> str:
     metrics = disorder_metrics(xs, order=order)
     return json.dumps(metrics, indent=2, ensure_ascii=False)
@@ -53,7 +29,7 @@ def get_disorder_metrics(xs: Sequence[int], *, order: Order = "asc") -> str:
 
 def show_disorder_metrics(xs: Sequence[int], *, order: Order = "asc") -> None:
     print(get_disorder_metrics(xs, order=order))
-    pass
+
 
 def get_disorder_metrics_with_state(
     xs: Sequence[int], state: SearchState, *, order: Order = "asc"
@@ -67,5 +43,4 @@ def get_disorder_metrics_with_state(
 def show_disorder_metrics_with_state(
     xs: Sequence[int], state: SearchState, *, order: Order = "asc"
 ) -> None:
-    # print(get_disorder_metrics_with_state(xs, state=state, order=order))
-    pass
+    print(get_disorder_metrics_with_state(xs, state=state, order=order))
