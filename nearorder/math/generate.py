@@ -24,10 +24,21 @@ def inject_adjacent_swaps(xs, swaps: int, seed=None):
 
 def block_shuffle(xs, block_size: int, seed=None):
     """Shuffle the sequence in blocks of specified size."""
+    if block_size <= 1:
+        return xs[:]  # critical fix: do nothing
+
     rng = random.Random(seed)
-    blocks = [xs[i : i + block_size] for i in range(0, len(xs), block_size)]
-    rng.shuffle(blocks)
+    xs = xs[:]
+    n = len(xs)
+
+    blocks = [xs[i : i + block_size] for i in range(0, n, block_size)]
+
+    for i in range(len(blocks) - 1):
+        if rng.random() < 0.5:
+            blocks[i], blocks[i + 1] = blocks[i + 1], blocks[i]
+
     return [x for block in blocks for x in block]
+
 
 
 def break_runs(xs, every: int):
@@ -54,19 +65,3 @@ def partial_shuffle(xs, ratio: float, seed=None):
 
     return xs
 
-
-def generate_with_target(
-    n: int,
-    order: Order,
-    local_inv_ratio: float,
-    block_size: int,
-    seed=None,
-):
-    xs = base_sequence(n, order=order)
-    xs = inject_adjacent_swaps(
-        xs,
-        swaps=int(local_inv_ratio * (n - 1)),
-        seed=seed,
-    )
-    xs = block_shuffle(xs, block_size, seed=seed)
-    return xs
