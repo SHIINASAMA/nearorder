@@ -14,7 +14,7 @@ def test_base_sequence():
 
 def test_inject_adjacent_swaps():
     seq = base_sequence(10)
-    swapped_seq = inject_adjacent_swaps(seq, swaps=1)
+    swapped_seq = inject_adjacent_swaps(seq, swaps=1, seed=114)
     assert len(swapped_seq) == len(seq)
     # Check that approximately 20% of the elements have been swapped
     swap_count = sum(1 for a, b in zip(seq, swapped_seq) if a != b)
@@ -23,7 +23,7 @@ def test_inject_adjacent_swaps():
 
 def test_block_shuffle():
     seq = base_sequence(16)
-    shuffled_seq = block_shuffle(seq, block_size=4)
+    shuffled_seq = block_shuffle(seq, block_size=4, seed=114)
     assert len(shuffled_seq) == len(seq)
     # Check that all elements are still present
     assert sorted(shuffled_seq) == sorted(seq)
@@ -55,7 +55,7 @@ def test_break_runs():
 
 def test_partial_shuffle():
     seq = base_sequence(10)
-    shuffled_seq = partial_shuffle(seq, ratio=0.3)
+    shuffled_seq = partial_shuffle(seq, ratio=0.3, seed=114)
     assert len(shuffled_seq) == len(seq)
     # Check that all elements are still present
     assert sorted(shuffled_seq) == sorted(seq)
