@@ -1,6 +1,6 @@
 [project]
 name = "nearorder"
-version = "0.1.0"
+version = "0.1.1"
 description = "Utilities for working with near-ordered sequences under bounded disorder."
 readme = "README.md"
 requires-python = ">=3.8"
