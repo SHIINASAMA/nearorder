@@ -1,11 +1,11 @@
-from typing import Optional, Sequence
+from typing import Optional
 
-from .types import Cmp, Order, T
+from .types import Cmp, Order, T, RandomAccess
 
 
 def binary_search(
-    xs: Sequence[T],
-    k,
+    xs: RandomAccess[T],
+    k: T,
     *,
     cmp: Cmp = lambda a, b: a - b,
     window_size: int = 1,
@@ -23,9 +23,10 @@ def binary_search(
     As a result, under severe disorder or unreliable comparison results,
     the target value may not be located.
 
-    :param xs: The sequence to operate on, typically assumed to be globally
-               ordered with possible local disorder.
-    :type xs: Sequence[T]
+    :param xs: A sized, random-access container providing ``__len__`` and
+           integer-based ``__getitem__``. The elements are assumed to be
+           globally ordered with possible local disorder.
+    :type xs: RandomAccess[T]
     :param k: The value to search for.
     :type k: T
     :param cmp: Comparison function used to determine relative ordering.

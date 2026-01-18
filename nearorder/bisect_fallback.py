@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
-from typing import List, Optional, Sequence, Tuple
+from typing import List, Optional, Tuple
 
-from .types import Cmp, Order, T
+from .types import Cmp, Order, T, RandomAccess
 
 
 @dataclass
@@ -12,7 +12,7 @@ class SearchState:
 
 
 def binary_search_with_fallback(
-    xs: Sequence[T],
+    xs: RandomAccess[T],
     k: T,
     *,
     cmp: Cmp = lambda a, b: a - b,
@@ -31,9 +31,10 @@ def binary_search_with_fallback(
     activated, the algorithm may degrade into traversing the entire sequence,
     resulting in near O(n) time complexity.
 
-    :param xs: The sequence to operate on, typically assumed to be globally
-               ordered with possible local disorder.
-    :type xs: Sequence[T]
+    :param xs: A sized, random-access container providing ``__len__`` and
+           integer-based ``__getitem__``. The elements are assumed to be
+           globally ordered with possible local disorder.
+    :type xs: RandomAccess[T]
     :param k: The value to search for.
     :type k: T
     :param cmp: Comparison function used to determine relative ordering.
