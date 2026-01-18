@@ -17,7 +17,7 @@ def binary_search_with_fallback(
     *,
     cmp: Cmp = lambda a, b: a - b,
     order: Order = "asc",
-    state: SearchState = None,
+    state: SearchState | None = None,
 ) -> Optional[int]:
     stack = [(0, len(xs) - 1, False)]  # fallback stack
 

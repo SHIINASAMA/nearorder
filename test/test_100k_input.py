@@ -4,6 +4,7 @@ import pytest
 
 from nearorder.bisect import binary_search
 from nearorder.bisect_fallback import SearchState, binary_search_with_fallback
+from nearorder.filter import filter_window
 from test.utils import parse_csv_datetimes
 
 
@@ -63,3 +64,12 @@ def test_binary_search_fallback_precise(data_with_k):
         data, k, cmp=cmp_precise, state=state, order="desc"
     )
     assert index == 6991
+
+
+def test_filter_window(data_with_k):
+    data, k = data_with_k
+    index = binary_search(data, k, cmp=cmp, order="desc")
+    assert index is not None
+    result = filter_window(data, k, index, window_size=24 * 4, cmp=cmp_precise)
+    assert len(result) == 1
+
