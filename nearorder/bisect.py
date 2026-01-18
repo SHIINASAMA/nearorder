@@ -30,7 +30,6 @@ def binary_search(
         # 2. Search in window
         window_left = max(0, mid - window_size)
         window_right = min(len(xs), mid + window_size + 1)
-        window = xs[window_left:window_right]
 
         c = 0
         for i in range(window_left, window_right):

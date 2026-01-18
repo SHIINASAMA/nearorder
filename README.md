@@ -53,31 +53,78 @@ In short, this is an **experiment-driven validation of a “good enough” solut
 
 ## Performance Analysis Summary
 
-The experimental results in `analysis/` consistently fall into four representative cases:
+The experimental results in `analysis/` and `test/` consistently fall into four representative cases:
 
-### 1\. Fully Ordered Sequence
+### 1\. Sparse Random Swaps (Low Disorder, The data the author has direct access to in practice.)
 
-**Conclusion:**  
-Behavior is equivalent to standard binary search, with no measurable overhead.
-
-### 2\. Sparse Random Swaps (Low Disorder)
+![](./analysis/image/1.vs.swap_count.png)
 
 **Conclusion:**  
 Performance remains stable and close to the ordered case; limited swaps do not meaningfully affect query time.
 
-### 3\. Increased but Bounded Disorder
+### 2\. Block-Level Disorder
+
+![](./analysis/image/2.vs.block-size.png)
 
 **Conclusion:**  
-Query time increases slowly and predictably; fallback and window mechanisms activate but remain infrequent and controlled.
+Spikes occur sporadically, but the average time doesn't show a clear increase or decrease with larger block sizes; it stays mostly flat with noise.
 
-### 4\. Pathological Local Disorder
+### 3\. Periodic Local Disorder
+
+![](./analysis/image/3.vs.break_every.png)
+
+**Conclusion:** 
+The spikes suggest specific points where performance degrades notably, likely due to alignment issues, while average performance appears stable.
+
+### 4\. Periodic Shuffle
+
+![](./analysis/image/4.vs.partial_shuffle_ratio.png)
 
 **Conclusion:**  
-The algorithm degrades gracefully instead of failing, with worst-case behavior explicitly surfaced through fallback counts rather than hidden latency spikes.
+There's a noticeable increase in both average time and spike severity as disorder grows, peaking in intermediates before stabilizing somewhat at extremes.
 
 ### Overall Observation
 
 At the 10⁵ scale, variations caused by reasonable levels of in-sequence disorder stay within a narrow and predictable performance range, making the approach suitable for long-term operation on mostly ordered data.
+
+## Recommended Usage Pattern
+
+For the type of data discussed above, a **two-phase search strategy** is recommended.
+
+1.  **Phase One: Coarse Binary Search**  
+    Apply binary search with **looser and more tolerant conditions** to obtain a *coarse* or *approximate index*.  
+    At this stage, the goal is localization rather than exact matching.
+    
+2.  **Phase Two: Window-Based Refinement**  
+    Using the coarse index as an anchor, collect data within a bounded window and perform targeted filtering and validation inside this range.
+
+
+```python
+from datetime import datetime
+
+from nearorder.bisect import binary_search
+from nearorder.filter import filter_window
+
+
+def cmp(a: datetime, b: datetime) -> int:
+    def datetime_to_days(dt: datetime) -> int:
+        return (dt - datetime(1900, 1, 1)).days + 2
+
+    rt = datetime_to_days(a) - datetime_to_days(b)
+    return int(rt)
+
+
+def cmp_precise(a: datetime, b: datetime) -> int:
+    rt = a.timestamp() - b.timestamp()
+    return int(rt)
+
+
+index = binary_search(data, k, cmp=cmp)
+assert index is not None
+result = filter_window(data, k, index, window_size=24 * 4, cmp=cmp_precise)
+assert len(result) > 0
+
+```
 
 ## What This Project Is / Is Not
 
@@ -96,3 +143,9 @@ This project is **NOT**:
 - A theoretically optimal algorithm for arbitrary input
 
 - A drop-in replacement for standard search
+
+## License
+
+Copyright (c) 2026 SHIINASAMA (Kaoru).  
+
+This project is licensed under the MIT License. See the LICENSE file for details.
