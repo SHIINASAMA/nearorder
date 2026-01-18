@@ -19,6 +19,33 @@ def binary_search_with_fallback(
     order: Order = "asc",
     state: SearchState | None = None,
 ) -> Optional[int]:
+    """
+    A binary search implementation with a fallback mechanism.
+
+    Under ideal conditions, this function behaves similarly to a standard
+    binary search. When comparison results become unreliable, local disorder
+    is encountered, or the search state degrades, fallback logic is triggered
+    to ensure reachability of the result.
+
+    It should be noted that in the worst case, where fallback is repeatedly
+    activated, the algorithm may degrade into traversing the entire sequence,
+    resulting in near O(n) time complexity.
+
+    :param xs: The sequence to operate on, typically assumed to be globally
+               ordered with possible local disorder.
+    :type xs: Sequence[T]
+    :param k: The value to search for.
+    :type k: T
+    :param cmp: Comparison function used to determine relative ordering.
+    :type cmp: Cmp
+    :param order: Global ordering of the sequence, ascending or descending.
+    :type order: Order
+    :param state: Optional search state object for tracking fallback behavior.
+    :type state: SearchState | None
+    :return: The index of the target if found; otherwise, None.
+    :rtype: int | None
+    """
+
     stack = [(0, len(xs) - 1, False)]  # fallback stack
 
     # normalize direction: asc = +1, desc = -1
