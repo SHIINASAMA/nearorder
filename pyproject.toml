@@ -5,7 +5,7 @@ description = "Utilities for working with near-ordered sequences under bounded d
 readme = "README.md"
 requires-python = ">=3.8"
 license = "MIT"
-license-files = [ "LICENSE" ]
+license-files = [ "LICENSE", "DUAL-LICENSE" ]
 dependencies = [
 ]
 

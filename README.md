@@ -146,6 +146,22 @@ This project is **NOT**:
 
 ## License
 
-Copyright (c) 2026 SHIINASAMA (Kaoru).  
+Copyright (c) 2026 SHIINASAMA (Kaoru).
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is released under a dual-licensing model.
+
+It is available under the MIT License to any individual or entity,
+**except for the organizations listed below**, for whom the MIT License
+does not apply.
+
+Use by the following organizations requires a separate commercial license:
+- Guangxi Guineng Power Co., Ltd.
+- Any of its affiliated, subsidiary, or related entities.
+
+This exception is a **defensive licensing measure** intended solely to
+avoid potential conflicts related to employment-associated intellectual
+property or organizational use, and does not restrict general open-source
+usage by the public.
+
+See `DUAL-LICENSE.md` for details.
+
