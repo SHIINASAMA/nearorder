@@ -47,11 +47,8 @@ def binary_search(
     left = 0
     right = len(xs) - 1
 
-    stack = []
-
     while left <= right:
         mid = (left + right) // 2
-        stack.append((left, right))
 
         # 1. Hit
         if cmp(xs[mid], k) == 0:
